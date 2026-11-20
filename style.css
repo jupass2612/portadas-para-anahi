@@ -202,3 +202,58 @@ button.primario { background: var(--acento); color: #000; }
   z-index: 5;
 }
 .musica.apagada { opacity: .5; text-decoration: line-through; }
+
+/* ---------- celular (iPhone SE y similares) ---------- */
+html { -webkit-text-size-adjust: 100%; }
+button, .portadas img, canvas { touch-action: manipulation; }
+
+@media (max-width: 600px) {
+  header { padding: 16px 12px 4px; }
+  h1 { font-size: 15px; text-shadow: 2px 2px 0 #000; }
+  #subtitulo { font-size: 13px; margin-top: 8px; }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 12px calc(16px + env(safe-area-inset-bottom));
+  }
+
+  main > * { min-width: 0; width: 100%; }
+
+  /* portadas arriba como tira deslizable */
+  .panel { order: -1; padding: 10px; }
+  .panel h2 { font-size: 9px; margin-bottom: 8px; }
+  .portadas {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    margin: 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .portadas img {
+    flex: 0 0 72px;
+    width: 72px;
+    height: 72px;
+    scroll-snap-align: start;
+  }
+  .portadas img:hover { transform: none; }
+
+  .marco { max-width: none; border-width: 2px; }
+  .vacio { font-size: 9px; }
+
+  .acciones { margin-top: 12px; gap: 8px; width: 100%; }
+  .acciones button { flex: 1; font-size: 9px; padding: 12px 8px; }
+  .estado { font-size: 13px; text-align: center; padding: 0 48px; }
+
+  .musica { left: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); padding: 10px 12px; }
+  .yt { width: 120px; height: 68px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .visor img { max-width: 94vw; border-width: 2px; }
+}
+
+/* iPhone SE de primera generacion (320px) */
+@media (max-width: 340px) {
+  h1 { font-size: 12px; }
+  .portadas img { flex-basis: 60px; width: 60px; height: 60px; }
+}
