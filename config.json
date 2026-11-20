@@ -4,8 +4,8 @@
   "musica": "",
   "ajustes": {
     "cuadros": 40,
-    "tinte": 45,
-    "revelar": 50,
+    "tinte": 30,
+    "revelar": 40,
     "orden": "centro",
     "duracion": 8
   }
