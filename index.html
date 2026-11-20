@@ -11,7 +11,7 @@
 <body>
   <header>
     <h1 id="titulo">Portadas para Anahí</h1>
-    <p id="subtitulo">cada pixel es un momento contigo</p>
+    <p id="subtitulo">cada pixel son tus bellos ojos que me encantan</p>
   </header>
 
   <main>
@@ -19,7 +19,7 @@
       <div class="marco">
         <canvas id="lienzo" width="1080" height="1080"></canvas>
         <div id="vacio" class="vacio">
-          <p>Sube fotos y una portada para empezar</p>
+          <p>Elige una portada ❤</p>
         </div>
       </div>
       <div class="acciones">
@@ -30,19 +30,11 @@
     </section>
 
     <aside class="panel">
-      <h2>Portadas</h2>
+      <h2>Elige una portada</h2>
       <div id="portadas" class="portadas"></div>
-      <label class="subir">+ Subir portada
-        <input type="file" id="inPortada" accept="image/*" hidden>
-      </label>
 
-      <h2>Fotos <span id="numFotos">0</span></h2>
-      <div id="fotosMini" class="fotos-mini"></div>
-      <label class="subir">+ Subir fotos
-        <input type="file" id="inFotos" accept="image/*" multiple hidden>
-      </label>
-
-      <h2>Ajustes</h2>
+      <details class="ajustes">
+      <summary>Ajustes</summary>
       <label class="ajuste">Pixeles por lado <b id="vCuadros">40</b>
         <input type="range" id="cuadros" min="12" max="80" value="40">
       </label>
@@ -63,6 +55,7 @@
       <label class="ajuste">Duración <b id="vDuracion">8 s</b>
         <input type="range" id="duracion" min="3" max="20" value="8">
       </label>
+      </details>
     </aside>
   </main>
 

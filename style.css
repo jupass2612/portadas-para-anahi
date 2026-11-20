@@ -167,3 +167,16 @@ button.primario { background: var(--acento); color: #000; }
 @media (max-width: 860px) {
   main { grid-template-columns: 1fr; }
 }
+
+.portadas { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.portadas img { transition: transform .15s, border-color .15s; }
+.portadas img:hover { transform: scale(1.04); }
+
+.ajustes { margin-top: 18px; }
+.ajustes summary {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--acento2);
+  cursor: pointer;
+  margin-bottom: 12px;
+}

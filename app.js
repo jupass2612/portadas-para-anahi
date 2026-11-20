@@ -61,13 +61,6 @@
       tile.width = tile.height = TILE;
       dibujarCuadrado(tile.getContext('2d'), img, TILE);
       fotos.push({ tile, firma: firmaDe(tile), url });
-
-      // miniatura en el panel
-      const mini = document.createElement('canvas');
-      mini.width = mini.height = 32;
-      mini.getContext('2d').drawImage(tile, 0, 0, 32, 32);
-      $('fotosMini').appendChild(mini);
-      $('numFotos').textContent = fotos.length;
     } catch (e) {
       console.warn(e.message);
     }
@@ -83,7 +76,6 @@
       el.onclick = () => elegirPortada(p);
       $('portadas').appendChild(el);
       portadas.push(p);
-      if (!portadaActiva) elegirPortada(p);
     } catch (e) {
       console.warn(e.message);
     }
@@ -100,9 +92,9 @@
     const listo = fotos.length > 0 && portadaActiva;
     $('btnArmar').disabled = !listo;
     $('vacio').hidden = !!listo;
-    if (!fotos.length) estado('Faltan fotos');
-    else if (!portadaActiva) estado('Falta elegir una portada');
-    else estado(`${fotos.length} fotos listas`);
+    if (!fotos.length) estado('Todavía no hay fotos en la carpeta fotos/');
+    else if (!portadas.length) estado('Todavía no hay portadas en la carpeta portadas/');
+    else if (!portadaActiva) estado('Toca una portada para armarla');
   }
 
   function estado(txt) { $('estado').textContent = txt; }
@@ -119,7 +111,7 @@
       await Promise.all((m.fotos || []).map((f) => agregarFoto(encodeURI(f))));
       for (const p of m.portadas || []) await agregarPortada(encodeURI(p), p.split('/').pop());
     } catch (e) {
-      console.warn('Sin manifest, usa los botones para subir', e);
+      console.warn('No se encontro manifest.json', e);
     }
   }
 
@@ -290,20 +282,6 @@
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     }, 'image/png');
-  };
-
-  $('inFotos').onchange = async (e) => {
-    estado('Procesando fotos...');
-    await Promise.all([...e.target.files].map((f) => agregarFoto(URL.createObjectURL(f))));
-    e.target.value = '';
-    revisarListo();
-  };
-
-  $('inPortada').onchange = async (e) => {
-    const f = e.target.files[0];
-    if (f) await agregarPortada(URL.createObjectURL(f), f.name);
-    e.target.value = '';
-    revisarListo();
   };
 
   const etiquetas = { cuadros: (v) => v, tinte: (v) => v + '%', revelar: (v) => v + '%', duracion: (v) => v + ' s' };
