@@ -83,6 +83,7 @@
 
   function elegirPortada(p) {
     portadaActiva = p;
+    if (!sonando) sonar(true);  // arranca con el primer toque
     portadas.forEach((x) => x.el.classList.toggle('activa', x === p));
     revisarListo();
     if (fotos.length) armar();
@@ -99,6 +100,50 @@
 
   function estado(txt) { $('estado').textContent = txt; }
 
+  // ---------- musica de fondo ----------
+
+  let musica = null;      // { play, pause }
+  let quiereSonar = false;
+  let sonando = false;
+
+  function prepararMusica(src) {
+    // mp3 propio dentro del repo
+    if (/\.(mp3|m4a|ogg|wav)$/i.test(src)) {
+      const audio = new Audio(src);
+      audio.loop = true;
+      musica = { play: () => audio.play().catch(() => {}), pause: () => audio.pause() };
+      $('btnMusica').hidden = false;
+      return;
+    }
+
+    // link o id de YouTube
+    const m = src.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+    const id = m ? m[1] : src.trim();
+    if (!/^[\w-]{11}$/.test(id)) return console.warn('Link de musica no valido', src);
+
+    window.onYouTubeIframeAPIReady = () => {
+      const yt = new YT.Player('yt', {
+        width: 160, height: 90, videoId: id,
+        playerVars: { loop: 1, playlist: id, controls: 0, playsinline: 1 },
+        events: { onReady: () => { if (quiereSonar) yt.playVideo(); } },
+      });
+      musica = { play: () => yt.playVideo && yt.playVideo(), pause: () => yt.pauseVideo && yt.pauseVideo() };
+    };
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+    $('btnMusica').hidden = false;
+  }
+
+  function sonar(si) {
+    quiereSonar = si;
+    sonando = si;
+    $('btnMusica').classList.toggle('apagada', !si);
+    if (musica) si ? musica.play() : musica.pause();
+  }
+
+  $('btnMusica').onclick = () => sonar(!sonando);
+
   // ajustes fijos desde config.json
   function aplicarAjustes(a) {
     for (const k of ['cuadros', 'tinte', 'revelar', 'orden', 'duracion']) {
@@ -111,14 +156,20 @@
     const usuario = location.hostname.split('.')[0];
     const repo = location.pathname.split('/').filter(Boolean)[0];
     const ext = /\.(jpe?g|png|webp|gif)$/i;
-    const listar = async (carpeta) => {
+    const listar = async (carpeta, filtro = ext) => {
       const r = await fetch(`https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}`);
       if (!r.ok) return [];
-      return (await r.json()).filter((f) => ext.test(f.name)).map((f) => `${carpeta}/${f.name}`);
+      return (await r.json()).filter((f) => filtro.test(f.name)).map((f) => `${carpeta}/${f.name}`);
     };
     let config = {};
     try { config = await (await fetch('config.json', { cache: 'no-store' })).json(); } catch {}
-    return { ...config, fotos: await listar('fotos'), portadas: await listar('portadas') };
+    const audios = await listar('musica', /\.(mp3|m4a|ogg|wav)$/i);
+    return {
+      ...config,
+      musica: config.musica || audios[0] || '',
+      fotos: await listar('fotos'),
+      portadas: await listar('portadas'),
+    };
   }
 
   // lee manifest.json que genera el workflow de GitHub
@@ -129,6 +180,7 @@
       if (m.titulo) { $('titulo').textContent = m.titulo; document.title = m.titulo; }
       if (m.subtitulo) $('subtitulo').textContent = m.subtitulo;
       aplicarAjustes(m.ajustes || {});
+      if (m.musica) prepararMusica(encodeURI(m.musica));
       estado('Cargando fotos...');
       await Promise.all((m.fotos || []).map((f) => agregarFoto(encodeURI(f))));
       for (const p of m.portadas || []) await agregarPortada(encodeURI(p), p.split('/').pop());

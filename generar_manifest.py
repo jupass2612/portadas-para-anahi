@@ -4,12 +4,12 @@ import os
 
 EXT = ('.jpg', '.jpeg', '.png', '.webp', '.gif')
 
-def listar(carpeta):
+def listar(carpeta, ext=EXT):
     if not os.path.isdir(carpeta):
         return []
     return sorted(
         f'{carpeta}/{f}' for f in os.listdir(carpeta)
-        if f.lower().endswith(EXT)
+        if f.lower().endswith(ext)
     )
 
 config = {}
@@ -21,6 +21,8 @@ manifest = {
     'titulo': config.get('titulo', ''),
     'subtitulo': config.get('subtitulo', ''),
     'ajustes': config.get('ajustes', {}),
+    # si no viene en config, toma el primer audio de musica/
+    'musica': config.get('musica') or next(iter(listar('musica', ('.mp3', '.m4a', '.ogg', '.wav'))), ''),
     'fotos': listar('fotos'),
     'portadas': listar('portadas'),
 }
