@@ -99,12 +99,26 @@
 
   function estado(txt) { $('estado').textContent = txt; }
 
+  // si no hay manifest, lista las carpetas con la API de GitHub
+  async function manifestDesdeGitHub() {
+    const usuario = location.hostname.split('.')[0];
+    const repo = location.pathname.split('/').filter(Boolean)[0];
+    const ext = /\.(jpe?g|png|webp|gif)$/i;
+    const listar = async (carpeta) => {
+      const r = await fetch(`https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}`);
+      if (!r.ok) return [];
+      return (await r.json()).filter((f) => ext.test(f.name)).map((f) => `${carpeta}/${f.name}`);
+    };
+    let config = {};
+    try { config = await (await fetch('config.json', { cache: 'no-store' })).json(); } catch {}
+    return { ...config, fotos: await listar('fotos'), portadas: await listar('portadas') };
+  }
+
   // lee manifest.json que genera el workflow de GitHub
   async function cargarManifest() {
     try {
       const r = await fetch('manifest.json', { cache: 'no-store' });
-      if (!r.ok) return;
-      const m = await r.json();
+      const m = r.ok ? await r.json() : await manifestDesdeGitHub();
       if (m.titulo) { $('titulo').textContent = m.titulo; document.title = m.titulo; }
       if (m.subtitulo) $('subtitulo').textContent = m.subtitulo;
       estado('Cargando fotos...');
