@@ -99,6 +99,13 @@
 
   function estado(txt) { $('estado').textContent = txt; }
 
+  // ajustes fijos desde config.json
+  function aplicarAjustes(a) {
+    for (const k of ['cuadros', 'tinte', 'revelar', 'orden', 'duracion']) {
+      if (a[k] !== undefined) $(k).value = a[k];
+    }
+  }
+
   // si no hay manifest, lista las carpetas con la API de GitHub
   async function manifestDesdeGitHub() {
     const usuario = location.hostname.split('.')[0];
@@ -121,6 +128,7 @@
       const m = r.ok ? await r.json() : await manifestDesdeGitHub();
       if (m.titulo) { $('titulo').textContent = m.titulo; document.title = m.titulo; }
       if (m.subtitulo) $('subtitulo').textContent = m.subtitulo;
+      aplicarAjustes(m.ajustes || {});
       estado('Cargando fotos...');
       await Promise.all((m.fotos || []).map((f) => agregarFoto(encodeURI(f))));
       for (const p of m.portadas || []) await agregarPortada(encodeURI(p), p.split('/').pop());
@@ -319,6 +327,9 @@
     $('visor').hidden = false;
   };
   $('visor').onclick = () => { $('visor').hidden = true; };
+
+  // panel de ajustes solo con ?ajustes en la url
+  if (new URLSearchParams(location.search).has('ajustes')) $('ajustes').hidden = false;
 
   cargarManifest().then(revisarListo);
 })();

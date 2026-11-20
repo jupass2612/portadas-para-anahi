@@ -1,4 +1,11 @@
 {
   "titulo": "Portadas para Anahí",
-  "subtitulo": "cada pixel son tus bellos ojos que me encantan"
+  "subtitulo": "cada pixel son tus bellos ojos que me encantan",
+  "ajustes": {
+    "cuadros": 40,
+    "tinte": 45,
+    "revelar": 25,
+    "orden": "centro",
+    "duracion": 8
+  }
 }

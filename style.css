@@ -180,3 +180,4 @@ button.primario { background: var(--acento); color: #000; }
   cursor: pointer;
   margin-bottom: 12px;
 }
+.ajustes[hidden] { display: none; }

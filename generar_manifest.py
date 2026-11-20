@@ -20,6 +20,7 @@ if os.path.exists('config.json'):
 manifest = {
     'titulo': config.get('titulo', ''),
     'subtitulo': config.get('subtitulo', ''),
+    'ajustes': config.get('ajustes', {}),
     'fotos': listar('fotos'),
     'portadas': listar('portadas'),
 }
