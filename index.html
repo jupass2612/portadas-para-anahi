@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portadas para Anahí</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1 id="titulo">Portadas para Anahí</h1>
+    <p id="subtitulo">cada pixel es un momento contigo</p>
+  </header>
+
+  <main>
+    <section class="escenario">
+      <div class="marco">
+        <canvas id="lienzo" width="1080" height="1080"></canvas>
+        <div id="vacio" class="vacio">
+          <p>Sube fotos y una portada para empezar</p>
+        </div>
+      </div>
+      <div class="acciones">
+        <button id="btnArmar" class="primario" disabled>▶ Armar</button>
+        <button id="btnDescargar" disabled>⬇ Descargar PNG</button>
+      </div>
+      <p id="estado" class="estado"></p>
+    </section>
+
+    <aside class="panel">
+      <h2>Portadas</h2>
+      <div id="portadas" class="portadas"></div>
+      <label class="subir">+ Subir portada
+        <input type="file" id="inPortada" accept="image/*" hidden>
+      </label>
+
+      <h2>Fotos <span id="numFotos">0</span></h2>
+      <div id="fotosMini" class="fotos-mini"></div>
+      <label class="subir">+ Subir fotos
+        <input type="file" id="inFotos" accept="image/*" multiple hidden>
+      </label>
+
+      <h2>Ajustes</h2>
+      <label class="ajuste">Pixeles por lado <b id="vCuadros">40</b>
+        <input type="range" id="cuadros" min="12" max="80" value="40">
+      </label>
+      <label class="ajuste">Tinte de color <b id="vTinte">45%</b>
+        <input type="range" id="tinte" min="0" max="90" value="45">
+      </label>
+      <label class="ajuste">Revelar portada al final <b id="vRevelar">25%</b>
+        <input type="range" id="revelar" min="0" max="70" value="25">
+      </label>
+      <label class="ajuste">Orden
+        <select id="orden">
+          <option value="centro">Desde el centro</option>
+          <option value="aleatorio">Aleatorio</option>
+          <option value="diagonal">Diagonal</option>
+          <option value="lluvia">Lluvia (de arriba)</option>
+        </select>
+      </label>
+      <label class="ajuste">Duración <b id="vDuracion">8 s</b>
+        <input type="range" id="duracion" min="3" max="20" value="8">
+      </label>
+    </aside>
+  </main>
+
+  <div id="visor" class="visor" hidden>
+    <img id="visorImg" alt="">
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
